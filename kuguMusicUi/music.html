@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" href="css/swiper.css">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/music.css">
+</head>
+<body ng-app="app">
+    <header class="header">
+        <div class="left">
+            <img src="images/logo.png" alt="">
+            <span class="updown">下载酷狗</span>
+        </div>
+        <div class="right"  ui-sref="search">
+            <img src="images/search.png" alt="">
+        </div>
+    </header>
+    <section class="section">
+        <ul class="list">
+            <li ui-sref="new">新歌</li>
+            <li ui-sref="order">排行</li>
+            <li class="li-col" ui-sref="list">歌单</li>
+            <li ui-sref="singer">歌手</li>
+        </ul>
+        <div class="content" ui-view>
+
+        </div>
+    </section>
+    <script src="js/angular.min.js"></script>
+    <script src="js/angular-ui-router.js"></script>
+    <script src="js/jquery-1.8.3.min.js"></script>
+    <script src="js/swiper.js"></script>
+    <script>
+        var app = angular.module('app',['ui.router'])
+        app.config(function($stateProvider,$urlRouterProvider){
+            $urlRouterProvider.otherwise('list');
+            $stateProvider
+            .state({
+                name:"new",
+                url: "/new",
+                title:"新歌",
+                templateUrl: "html/new.html",
+                controller:function($rootScope,$http,$log) {
+                    $http.get("data/music_list.json")
+                            .then(function (json) {
+//                          $log.log(json.data.data)
+                        $rootScope.data = json.data.data
+                    })
+                    var mybanner = new Swiper('.swiper-container',{
+                        autoplay: 1000
+                    });
+                    $(".new-box").on("click",'.down',function(){
+                        $(".big-box").css("display","block")
+                    })
+                    $(".span-left").on("click",function(){
+                        $(".big-box").css("display","none")
+                    })
+                    $(".span-right").on("click",function(){
+                        $(".big-box").css("display","none")
+                    })
+                }
+            })
+            .state({
+                name:"order",
+                url: "/order",
+                title:"排行",
+                templateUrl:"html/order.html"
+            })
+            .state({
+                name:"list",
+                url: "/list",
+                title:"歌单",
+                templateUrl: "html/list.html",
+                controller:function(){
+                    var mybanner = new Swiper('.swiper-container',{
+                        autoplay: 1000
+                    });
+                    $(".new-box").on("click",'.down',function(){
+                        $(".big-box").css("display","block")
+                    })
+                    $(".span-left").on("click",function(){
+                        $(".big-box").css("display","none")
+                    })
+                    $(".span-right").on("click",function(){
+                        $(".big-box").css("display","none")
+                    })
+                }
+            })
+            .state({
+                name:"singer",
+                url: "/singer",
+                title: "歌手",
+                templateUrl:"html/singer.html",
+                controller:function($rootScope,$http,$state) {
+                    $http.get("data/music_wrap2.json")
+                            .then(function (json) {
+                                console.log(json)
+                            })
+
+                }
+            })
+            .state({
+                name: 'search',
+                url:"/search",
+                templateUrl:"html/search.html",
+                controller:function($rootScope,$http,$state) {
+                    $http.get("data/music_list.json")
+                        .then(function (json) {
+                            $rootScope.data = json.data.data
+                        })
+                    $rootScope.go = function(){
+                        $state.go('new');
+                    }
+                }
+            })
+        })
+        $(".list").on("click","li",function(){
+            $(this).addClass("li-col").siblings().removeClass("li-col");
+        })
+
+    </script>
+</body>
+</html>

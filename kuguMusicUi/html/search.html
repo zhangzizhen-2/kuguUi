@@ -1,0 +1,14 @@
+<div class="search">
+    <div class="top">
+        <input type="text" ng-model="texts">
+        <span class="ser" ng-click="go()">搜索</span>
+    </div>
+    
+    <ul class="search-box" >
+        <li ng-repeat="i in data | filter:texts">
+            <span class="name">{{i.singers}}</span>-<span class="song">{{i.song_name}}</span>
+            <span class="down"><img src="images/download_icon_2.png" alt="图片未加载"></span>
+        </li>
+    </ul>
+</div>
+<vi-view></vi-view>
